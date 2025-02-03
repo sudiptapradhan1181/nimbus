@@ -1,118 +1,49 @@
 "use client";
-import AgoraRTC from "agora-rtc-sdk-ng";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import agoraToken from "agora-token";
 
 export default function Home() {
-  let rtc = {
-    localAudioTrack: null,
-    localVideoTrack: null,
-    client: null, // AgoraRTC client object
-  };
-
-  let options = {
-    appId: "0bd2ee29238d4b02a9ea58df4e959556", // Your app ID
-    channel: "hogwarts", // Channel name
-    token:
-      "007eJxTYOBn0b39sKZhwpUcbxH1+jVmxgKvhQQ57h/P8r224cr6RUIKDAZJKUapqUaWRsYWKSZJBkaJlqmJphYpaSaplqaWpqZm3LfmpjcEMjJI9l5jYIRCEJ+DISM/vTyxqKSYgQEARmUftA==", // Temp token
-    uid: 123456, // User ID
-  };
-
-  // Initialize the AgoraRTC client
-  function initializeClient() {
-    rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-    setupEventListeners();
-  }
-
-  // Join a channel and publish local media
-  async function joinChannel() {
-    await rtc.client.join(
-      options.appId,
-      options.channel,
-      options.token,
-      options.uid
-    );
-    await createAndPublishLocalTracks();
-    displayLocalVideo();
-    console.log("Publish success!");
-  }
-
-  // Create and publish local tracks
-  async function createAndPublishLocalTracks() {
-    rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-    rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-    await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
-  }
-
-  function displayRemoteVideo(user) {
-    const remotePlayerContainer = document.createElement("div");
-    remotePlayerContainer.id = user.uid.toString();
-    remotePlayerContainer.textContent = `Remote user ${user.uid}`;
-    remotePlayerContainer.style.width = "640px";
-    remotePlayerContainer.style.height = "480px";
-    document.body.append(remotePlayerContainer);
-    user.videoTrack.play(remotePlayerContainer);
-  }
-
-  function displayLocalVideo() {
-    const localPlayerContainer = document.createElement("div");
-    localPlayerContainer.id = options.uid;
-    localPlayerContainer.textContent = `Local user ${options.uid}`;
-    localPlayerContainer.style.width = "640px";
-    localPlayerContainer.style.height = "480px";
-    document.body.append(localPlayerContainer);
-    rtc.localVideoTrack.play(localPlayerContainer);
-  }
-
-  async function leaveChannel() {
-    // Close local tracks
-    rtc.localAudioTrack.close();
-    rtc.localVideoTrack.close();
-    // Remove local video container
-    const localPlayerContainer = document.getElementById(options.uid);
-    localPlayerContainer && localPlayerContainer.remove();
-    // Remove all remote video containers
-    rtc.client.remoteUsers.forEach((user) => {
-      const playerContainer = document.getElementById(user.uid);
-      playerContainer && playerContainer.remove();
-    });
-    // Leave the channel
-    await rtc.client.leave();
-  }
-
-  function setupEventListeners() {
-    rtc.client.on("user-published", async (user, mediaType) => {
-      await rtc.client.subscribe(user, mediaType);
-      console.log("subscribe success");
-      if (mediaType === "video") {
-        displayRemoteVideo(user);
-      }
-      if (mediaType === "audio") {
-        user.audioTrack.play();
-      }
-    });
-    rtc.client.on("user-unpublished", (user) => {
-      const remotePlayerContainer = document.getElementById(user.uid);
-      remotePlayerContainer && remotePlayerContainer.remove();
-    });
-  }
-
-  useEffect(() => {
-    initializeClient();
-  }, []);
-
+  const router = useRouter();
+  const { RtcRole } = agoraToken;
+  const [channelName, setChannelName] = useState("");
+  const [userType, setUserType] = useState();
   return (
-    <div className="w-screen bg-gray-800">
+    <div>
+      <h1>Welcome to the Agora Video Call App</h1>
+      <p>Click the button below to join the video call</p>
+      <input
+        className="m-2 p-2 rounded-md w-1/4 text-black"
+        placeholder="Channel Name"
+        value={channelName}
+        onChange={(e) => setChannelName(e.target.value)}
+      />
+      <div className="flex flex-row items-center">
+        <input
+          type="radio"
+          name="userType"
+          value={RtcRole.PUBLISHER}
+          onChange={() => setUserType(RtcRole.PUBLISHER)}
+        />
+        <label>Publisher</label>
+
+        <input
+          type="radio"
+          name="userType"
+          value={RtcRole.SUBSCRIBER}
+          onChange={() => setUserType(RtcRole.SUBSCRIBER)}
+        />
+        <label>Subscriber</label>
+      </div>
       <button
-        onClick={joinChannel}
-        className="bg-blue-500 text-white p-2 rounded-md"
+        onClick={() =>
+          router.push(
+            "/video-call?channel=" + channelName + "&userType=" + userType
+          )
+        }
+        className="bg-gray-500 rounded-md p-2"
       >
-        Join Channel
-      </button>
-      <button
-        onClick={leaveChannel}
-        className="bg-red-500 text-white p-2 rounded-md"
-      >
-        Leave Channel
+        Join Video Call
       </button>
     </div>
   );
