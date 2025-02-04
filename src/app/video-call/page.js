@@ -12,13 +12,13 @@ export default function VideoCall() {
   let rtc = {
     localAudioTrack: null,
     localVideoTrack: null,
-    client: null, // AgoraRTC client object
+    client: null,
   };
 
   let options = {
-    appId: "0bd2ee29238d4b02a9ea58df4e959556", // Your app ID
-    appCertificate: "85ebaeebd4cc416ca467492c62205f5a",
-    uid: Math.ceil(Math.random() * 100000), // User ID
+    appId: process.env.NEXT_PUBLIC_APP_ID,
+    appCertificate: process.env.NEXT_PUBLIC_APP_CERTIFICATE,
+    uid: Math.ceil(Math.random() * 100000),
   };
 
   let tokenWithUid = "";
@@ -54,6 +54,7 @@ export default function VideoCall() {
   }
 
   function displayRemoteVideo(user) {
+    console.lof("Displaying remote video", user);
     const remotePlayerContainer = document.createElement("div");
     remotePlayerContainer.id = user.uid.toString();
     remotePlayerContainer.textContent = `Remote user ${user.uid}`;
@@ -64,6 +65,7 @@ export default function VideoCall() {
   }
 
   function displayLocalVideo() {
+    console.log("Displaying local video");
     const localPlayerContainer = document.createElement("div");
     localPlayerContainer.id = options.uid;
     localPlayerContainer.textContent = `Local user ${options.uid}`;
@@ -75,23 +77,24 @@ export default function VideoCall() {
 
   async function leaveChannel() {
     // Close local tracks
-    rtc.localAudioTrack.close();
-    rtc.localVideoTrack.close();
+    rtc?.localAudioTrack.close();
+    rtc?.localVideoTrack.close();
     // Remove local video container
     const localPlayerContainer = document.getElementById(options.uid);
     localPlayerContainer && localPlayerContainer.remove();
     // Remove all remote video containers
-    rtc.client.remoteUsers.forEach((user) => {
+    rtc?.client?.remoteUsers?.forEach((user) => {
       const playerContainer = document.getElementById(user.uid);
       playerContainer && playerContainer.remove();
     });
     // Leave the channel
-    await rtc.client.leave();
+    await rtc?.client?.leave();
   }
 
   function setupEventListeners() {
-    rtc.client.on("user-published", async (user, mediaType) => {
-      await rtc.client.subscribe(user, mediaType);
+    console.log("Setting up event listeners");
+    rtc?.client?.on("user-published", async (user, mediaType) => {
+      await rtc?.client?.subscribe(user, mediaType);
       console.log("subscribe success");
       if (mediaType === "video") {
         displayRemoteVideo(user);
@@ -100,7 +103,7 @@ export default function VideoCall() {
         user.audioTrack.play();
       }
     });
-    rtc.client.on("user-unpublished", (user) => {
+    rtc?.client?.on("user-unpublished", (user) => {
       const remotePlayerContainer = document.getElementById(user.uid);
       remotePlayerContainer && remotePlayerContainer.remove();
     });
