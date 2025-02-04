@@ -1,10 +1,10 @@
 "use client";
 import dynamic from "next/dynamic";
 
-const CallComponent = dynamic(() => import("@/components/CallComponent"), {
+const CallParent = dynamic(() => import("@/components/CallParent"), {
   ssr: false,
 });
 
 export default function VideoCallPage() {
-  return <CallComponent />;
+  return <CallParent />;
 }
