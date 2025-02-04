@@ -4,7 +4,7 @@ import agoraToken from "agora-token";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function VideoCall() {
+export default function CallComponent() {
   const [channelName, setChannelName] = useState("");
   const { RtcTokenBuilder, RtcRole } = agoraToken;
   const searchParams = useSearchParams();
