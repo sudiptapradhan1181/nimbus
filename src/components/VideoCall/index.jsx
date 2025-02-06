@@ -12,11 +12,13 @@ import {
 import { useEffect, useState } from "react";
 import agoraToken from "agora-token";
 import VideoPlaceholder from "../VideoPlaceholder";
+import LoginComponent from "../LoginComponent";
 
 export default function VideoCall() {
   const [calling, setCalling] = useState(false);
   const isConnected = useIsConnected();
   const [channelName, setChannelName] = useState("");
+  const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
   const { RtcTokenBuilder, RtcRole } = agoraToken;
   const tokenExpirationInSecond = 3600;
@@ -39,6 +41,10 @@ export default function VideoCall() {
   const remoteUsers = useRemoteUsers();
 
   const generateToken = () => {
+    if (password !== process.env.NEXT_PUBLIC_MEET_CODE) {
+      alert("Invalid Meet Code");
+      return;
+    }
     const timestamp = Math.floor(Date.now() / 1000) + tokenExpirationInSecond;
     const rtcToken = RtcTokenBuilder.buildTokenWithUserAccount(
       process.env.NEXT_PUBLIC_APP_ID,
@@ -62,7 +68,7 @@ export default function VideoCall() {
     <>
       {isConnected ? (
         <div className="w-screen h-screen flex flex-col">
-          <div className="w-full h-[90%] flex flex-row">
+          <div className="w-full h-[90%] flex flex-col lg:flex-row">
             <div className="relative w-full h-full rounded-md p-6">
               <LocalUser
                 audioTrack={localMicrophoneTrack}
@@ -127,21 +133,13 @@ export default function VideoCall() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center">
-          <input
-            className="m-2 p-2 rounded-md w-1/4 text-black"
-            placeholder="Channel Name"
-            value={channelName}
-            onChange={(e) => setChannelName(e.target.value)}
-          />
-
-          <button
-            onClick={generateToken}
-            className="bg-gray-500 rounded-md p-2"
-          >
-            Join Video Call
-          </button>
-        </div>
+        <LoginComponent
+          channelName={channelName}
+          setChannelName={setChannelName}
+          generateToken={generateToken}
+          password={password}
+          setPassword={setPassword}
+        />
       )}
     </>
   );
