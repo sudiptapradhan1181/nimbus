@@ -1,10 +1,10 @@
 "use client";
 import dynamic from "next/dynamic";
 
-const CallParent = dynamic(() => import("@/components/CallParent"), {
+const AgoraWrapper = dynamic(() => import("@/components/AgoraWrapper"), {
   ssr: false,
 });
 
 export default function VideoCallPage() {
-  return <CallParent />;
+  return <AgoraWrapper />;
 }

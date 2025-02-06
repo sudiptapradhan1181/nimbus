@@ -11,6 +11,7 @@ import {
 } from "agora-rtc-react";
 import { useEffect, useState } from "react";
 import agoraToken from "agora-token";
+import VideoPlaceholder from "../VideoPlaceholder";
 
 export default function VideoCall() {
   const [calling, setCalling] = useState(false);
@@ -70,20 +71,7 @@ export default function VideoCall() {
                 videoTrack={localCameraTrack}
                 className="rounded-md"
               >
-                {!cameraOn ? (
-                  <div className="w-full h-full bg-[#6570A3] rounded-md justify-center items-center flex relative">
-                    <div className="w-[100px] h-[100px] bg-[#444575] rounded-full justify-center items-center flex">
-                      <img
-                        src="/icons/user.svg"
-                        alt="user"
-                        className="w-[60%] h-[60%]"
-                      />
-                    </div>
-                    <div className="absolute bottom-2 right-2 p-2 bg-[#444575] text-[#FFFFFF] rounded-md">
-                      <span>You</span>
-                    </div>
-                  </div>
-                ) : null}
+                {!cameraOn ? <VideoPlaceholder caption="You" /> : null}
                 <div className="absolute bottom-2 right-2 p-2 bg-[#444575] text-[#FFFFFF] rounded-md">
                   <span>You</span>
                 </div>
@@ -91,7 +79,6 @@ export default function VideoCall() {
             </div>
 
             {remoteUsers?.map((user, idx) => {
-              console.log(user, "user details");
               return (
                 <div
                   className="relative w-full h-full rounded-md p-6"
@@ -99,15 +86,7 @@ export default function VideoCall() {
                 >
                   <RemoteUser user={user} className="rounded-md">
                     {!user.hasVideo ? (
-                      <div className="w-full h-full bg-[#6570A3] rounded-md justify-center items-center flex">
-                        <div className="w-[100px] h-[100px] bg-[#444575] rounded-full justify-center items-center flex">
-                          <img
-                            src="/icons/user.svg"
-                            alt="user"
-                            className="w-[60%] h-[60%]"
-                          />
-                        </div>
-                      </div>
+                      <VideoPlaceholder caption={user.uid} />
                     ) : null}
                     <div className="absolute bottom-2 right-2 p-2 bg-[#444575] text-[#FFFFFF] rounded-md">
                       <span>{user.uid}</span>
