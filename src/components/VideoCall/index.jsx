@@ -8,6 +8,16 @@ import {
   useLocalCameraTrack,
   usePublish,
   useRemoteUsers,
+  AgoraRTCScreenShareProvider,
+  useTrackEvent,
+  useLocalScreenTrack,
+  LocalVideoTrack,
+  LocalAudioTrack,
+  RemoteVideoTrack,
+  RemoteAudioTrack,
+  useRemoteVideoTracks,
+  useRemoteAudioTracks,
+  useRemoteUserTrack,
 } from "agora-rtc-react";
 import { useEffect, useState } from "react";
 import agoraToken from "agora-token";
@@ -36,9 +46,51 @@ export default function VideoCall() {
   const [cameraOn, setCameraOn] = useState(false);
   const { localMicrophoneTrack } = useLocalMicrophoneTrack(micOn);
   const { localCameraTrack } = useLocalCameraTrack(cameraOn);
-  usePublish([localMicrophoneTrack, localCameraTrack]);
+
+  const [screenVideoTrack, setScreenVideoTrack] = useState(null);
+  const [screenAudioTrack, setScreenAudioTrack] = useState(null);
+  const [screenShareOn, setScreenShareOn] = useState(false);
+
+  useTrackEvent(screenVideoTrack, "track-ended", () => {
+    console.log("screen sharing ended");
+    setScreenShareOn(false);
+  });
+
+  const { screenTrack, error: screenShareError } =
+    useLocalScreenTrack(screenShareOn);
+
+  useEffect(() => {
+    if (!screenTrack) {
+      setScreenAudioTrack(null);
+      setScreenVideoTrack(null);
+    } else {
+      if (Array.isArray(screenTrack)) {
+        setScreenVideoTrack(
+          screenTrack.filter((track) => track.trackMediaType === "video")[0]
+        );
+        setScreenAudioTrack(
+          screenTrack.filter((track) => track.trackMediaType === "audio")[0]
+        );
+      } else {
+        setScreenVideoTrack(screenTrack);
+      }
+    }
+  }, [screenTrack]);
+
+  useEffect(() => {
+    setScreenShareOn(false);
+  }, [screenShareError]);
+
+  usePublish([
+    localMicrophoneTrack,
+    localCameraTrack,
+    // screenAudioTrack,
+    // screenVideoTrack,
+  ]);
 
   const remoteUsers = useRemoteUsers();
+  const videoTracks = useRemoteVideoTracks(remoteUsers);
+  const audioTrack = useRemoteUserTrack(remoteUsers[0], "audio");
 
   const generateToken = () => {
     if (password !== process.env.NEXT_PUBLIC_MEET_CODE) {
@@ -54,7 +106,6 @@ export default function VideoCall() {
       RtcRole.PUBLISHER,
       timestamp
     );
-    console.log(rtcToken, "rtcToken");
     setToken(rtcToken);
   };
 
@@ -84,7 +135,32 @@ export default function VideoCall() {
               </LocalUser>
             </div>
 
+            {screenShareOn ? (
+              <>
+                {screenVideoTrack && (
+                  <LocalVideoTrack
+                    disabled={!screenShareOn}
+                    play={screenShareOn}
+                    style={{ width: "100%", height: "100%" }}
+                    track={screenVideoTrack}
+                  />
+                )}
+                {screenAudioTrack && (
+                  <LocalAudioTrack
+                    disabled={!screenShareOn}
+                    track={screenAudioTrack}
+                  />
+                )}
+              </>
+            ) : null}
+
+            {/* {videoTracks?.length > 0 &&
+              videoTracks?.map((track, idx) => {
+                <RemoteVideoTrack key={idx} play track={track} />;
+              })} */}
+
             {remoteUsers?.map((user, idx) => {
+              console.log(user, "hello user");
               return (
                 <div
                   className="relative w-full h-full rounded-md p-6"
@@ -124,6 +200,9 @@ export default function VideoCall() {
                 <img src="/icons/camOff.svg" alt="camOff" />
               )}
             </button>
+            {/* <button onClick={() => setScreenShareOn(!screenShareOn)}>
+              Share Screen
+            </button> */}
             <button
               onClick={() => setCalling(false)}
               className="w-10 h-10 p-2 m-2 bg-[red] text-white rounded-full cursor-pointer"
