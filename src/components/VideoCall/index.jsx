@@ -119,8 +119,14 @@ export default function VideoCall() {
     <>
       {isConnected ? (
         <div className="w-screen h-screen flex flex-col">
-          <div className="w-full h-[90%] flex flex-col lg:flex-row">
-            <div className="relative w-full h-full rounded-md p-6">
+          <div className="w-full h-[90%] flex flex-wrap flex-col lg:flex-row items-center justify-center overflow-hidden">
+            <div
+              className={`relative rounded-md p-1 ${
+                remoteUsers?.length > 1
+                  ? "h-[350px] w-[350px]"
+                  : "h-[500px] w-1/2 "
+              }`}
+            >
               <LocalUser
                 audioTrack={localMicrophoneTrack}
                 cameraOn={cameraOn}
@@ -163,7 +169,11 @@ export default function VideoCall() {
               console.log(user, "hello user");
               return (
                 <div
-                  className="relative w-full h-full rounded-md p-6"
+                  className={`relative rounded-md p-1 ${
+                    remoteUsers?.length > 1
+                      ? "h-[350px] w-[350px]"
+                      : "h-[500px] w-1/2 "
+                  }`}
                   key={idx}
                 >
                   <RemoteUser user={user} className="rounded-md">
