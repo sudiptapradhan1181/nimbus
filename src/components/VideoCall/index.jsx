@@ -27,9 +27,11 @@ import LoginComponent from "../LoginComponent";
 export default function VideoCall() {
   const [calling, setCalling] = useState(false);
   const isConnected = useIsConnected();
-  const [channelName, setChannelName] = useState("");
+  const [channelName, setChannelName] = useState("apt");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(
+    "007eJxTYEhvWNNzNOhHcmLVezarncXbN+lcP3gwxsfHV1lu465pFxMUGAySUoxSU40sjYwtUkySDIwSLVMTTS1S0kxSLU0tTU3NbM6sSfe5tSZdVySDgREIWYAYBJjAJDOYZIGyEwtKGBgAqqsfzA=="
+  );
   const { RtcTokenBuilder, RtcRole } = agoraToken;
   const tokenExpirationInSecond = 3600;
 
@@ -111,22 +113,27 @@ export default function VideoCall() {
 
   useEffect(() => {
     if (token) {
+      console.log(token, "token");
       setCalling(true);
     }
   }, [token]);
 
+  const layout = () => {
+    return `relative rounded-md p-1 ${
+      remoteUsers?.length > 4
+        ? "h-[250px] w-1/2 lg:h-[350px] lg:w-[350px]"
+        : remoteUsers?.length > 1
+        ? "h-[350px] w-1/2 lg:h-[350px] lg:w-[350px]"
+        : "h-[250px] w-full lg:h-[500px] lg:w-1/2 "
+    }`;
+  };
+
   return (
     <>
       {isConnected ? (
-        <div className="w-screen h-screen flex flex-col">
-          <div className="w-full h-[90%] flex flex-wrap flex-col lg:flex-row items-center justify-center overflow-hidden">
-            <div
-              className={`relative rounded-md p-1 ${
-                remoteUsers?.length > 1
-                  ? "h-[350px] w-[350px]"
-                  : "h-[500px] w-1/2 "
-              }`}
-            >
+        <div className="w-screen h-screen flex flex-col justify-between">
+          <div className="w-full lg:h-[90%] flex flex-wrap flex-row items-center justify-center overflow-hidden">
+            <div className={layout()}>
               <LocalUser
                 audioTrack={localMicrophoneTrack}
                 cameraOn={cameraOn}
@@ -166,16 +173,8 @@ export default function VideoCall() {
               })} */}
 
             {remoteUsers?.map((user, idx) => {
-              console.log(user, "hello user");
               return (
-                <div
-                  className={`relative rounded-md p-1 ${
-                    remoteUsers?.length > 1
-                      ? "h-[350px] w-[350px]"
-                      : "h-[500px] w-1/2 "
-                  }`}
-                  key={idx}
-                >
+                <div className={layout()} key={idx}>
                   <RemoteUser user={user} className="rounded-md">
                     {!user.hasVideo ? (
                       <VideoPlaceholder caption={user.uid} />
