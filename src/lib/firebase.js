@@ -3,15 +3,16 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// Your Firebase configuration (replace this with your actual config from Firebase Console)
+// Your Firebase configuration (replace this with your actual config from Firebase Console)\
+
 const firebaseConfig = {
-  apiKey: "AIzaSyD3pJvgUdMcj1Io_FQ3KvgsBcXMBrZ2Ok0",
-  authDomain: "nimbus-94d1a.firebaseapp.com",
-  projectId: "nimbus-94d1a",
-  storageBucket: "nimbus-94d1a.firebasestorage.app",
-  messagingSenderId: "1009330807179",
-  appId: "1:1009330807179:web:6fe8e6f54d1e6899efcf8e",
-  measurementId: "G-QMLT6BBBVV",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSENGER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase

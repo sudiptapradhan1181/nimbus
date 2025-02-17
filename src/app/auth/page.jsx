@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { signUp, signIn } from "@/lib/auth";
+import { signUp, signIn, signInWithGoogle } from "@/lib/auth";
 
 const AuthPage = () => {
   const [email, setEmail] = useState("");
@@ -19,6 +19,15 @@ const AuthPage = () => {
     try {
       const user = await signIn(email, password);
       alert("Sign-in successful!");
+    } catch (error) {
+      alert("Sign-in failed: " + error.message);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const user = await signInWithGoogle();
+      alert(`Signed in as ${user.displayName}`);
     } catch (error) {
       alert("Sign-in failed: " + error.message);
     }
@@ -43,6 +52,10 @@ const AuthPage = () => {
       <br />
       <button onClick={handleSignUp}>Sign Up</button>
       <button onClick={handleSignIn}>Sign In</button>
+
+      <div style={{ padding: "20px" }}>
+        <button onClick={handleGoogleSignIn}>Sign In with Google</button>
+      </div>
     </div>
   );
 };
