@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { signUp, signIn, signInWithGoogle } from "@/lib/auth";
+import CustomInput from "@/components/CustomInput";
+import CustomCTA from "@/components/CustomCTA";
 
 const AuthPage = () => {
   const [email, setEmail] = useState("");
@@ -34,27 +36,54 @@ const AuthPage = () => {
   };
 
   return (
-    <div style={{ padding: "20px", color: "black" }}>
-      <h2>Authentication</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <br />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br />
-      <button onClick={handleSignUp}>Sign Up</button>
-      <button onClick={handleSignIn}>Sign In</button>
+    <div className="text-white w-screen h-screen flex flex-col items-center justify-center gap-10 bg-black">
+      <div className="flex flex-col items-center justify-center gap-2">
+        <h1 className="font-bold text-[52px]">Sign Up for Free</h1>
+        <h2 className="font-medium text-[30px]">
+          We won't sell your data to anyone.
+        </h2>
+      </div>
+      <div className="flex flex-col items-center justify-center gap-8">
+        <CustomInput
+          label={"Email Address"}
+          type={"email"}
+          value={email}
+          onChange={setEmail}
+          placeholder={"Enter your email address"}
+          iconUrl={"/icons/email.svg"}
+          iconAlt={"email"}
+        />
+        <CustomInput
+          label={"Password"}
+          type={"password"}
+          value={password}
+          onChange={setPassword}
+          placeholder={"Enter your password"}
+          iconUrl={"/icons/password.svg"}
+          iconAlt={"password"}
+        />
+        <CustomCTA
+          text={"Sign Up"}
+          onClick={handleSignUp}
+          secondaryIconUrl={"/icons/login.svg"}
+        />
 
-      <div style={{ padding: "20px" }}>
-        <button onClick={handleGoogleSignIn}>Sign In with Google</button>
+        <div className="flex flex-row items-center justify-center gap-1 text-sm">
+          <span>Already have an account?</span>
+          <button
+            onClick={handleSignIn}
+            className="text-[#4F45E4] font-semibold cursor-pointer"
+          >
+            Sign In
+          </button>
+        </div>
+
+        <CustomCTA
+          text={"Sign In With Google"}
+          onClick={handleGoogleSignIn}
+          primaryIconUrl={"/icons/google.svg"}
+          btnBg={"bg-[#111729]"}
+        />
       </div>
     </div>
   );
