@@ -43,13 +43,13 @@ const AuthPage = () => {
 
   return (
     <div className="relative text-white w-screen h-screen flex flex-col items-center justify-center gap-10 bg-black">
-      <div className="absolute bottom-0 left-0 w-[300px] h-[300px]">
+      {/* <div className="absolute bottom-0 left-0 w-[300px] h-[300px]">
         <img
           className="w-full h-full"
           src="/animations/auth.gif"
           alt="animation"
         />
-      </div>
+      </div> */}
       <div className="flex flex-col items-center justify-center gap-2">
         <h1 className="font-bold text-[52px]">Sign Up for Free</h1>
         <h2 className="font-medium text-[30px]">
