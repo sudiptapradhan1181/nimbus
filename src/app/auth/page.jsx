@@ -1,36 +1,14 @@
 "use client";
 import { useState } from "react";
-import { signUp, signIn, signInWithGoogle } from "@/lib/auth";
-import CustomInput from "@/components/CustomInput";
-import CustomCTA from "@/components/CustomCTA";
+import { signInWithGoogle } from "@/lib/auth";
+import SignUp from "./components/SignUp";
+import SignIn from "./components/SignIn";
 
 const AuthPage = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleSignUp = async () => {
-    console.log("Signing up...");
-    try {
-      const user = await signUp(email, password, username);
-      console.log("User signed up:", user);
-      alert("Sign-up successful!");
-    } catch (error) {
-      console.error("Sign-up error:", error.message);
-      alert("Sign-up failed: " + error.message);
-    }
-  };
-
-  const handleSignIn = async () => {
-    try {
-      const user = await signIn(email, password);
-      console.log("User signed up:", user);
-      alert("Sign-in successful!");
-    } catch (error) {
-      console.error("Sign-up error:", error.message);
-      alert("Sign-in failed: " + error.message);
-    }
-  };
+  const [isSignUp, setIsSignUp] = useState(true);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -39,6 +17,10 @@ const AuthPage = () => {
     } catch (error) {
       alert("Sign-in failed: " + error.message);
     }
+  };
+
+  const handleToggleSignUp = () => {
+    setIsSignUp(!isSignUp);
   };
 
   return (
@@ -56,57 +38,27 @@ const AuthPage = () => {
           We won't sell your data to anyone.
         </h2>
       </div>
-      <div className="flex flex-col items-center justify-center gap-8">
-        <CustomInput
-          label={"Full Name"}
-          type={"text"}
-          value={username}
-          onChange={setUsername}
-          placeholder={"Enter your full name"}
-          iconUrl={"/icons/userWhite.svg"}
-          iconAlt={"email"}
+      {isSignUp ? (
+        <SignUp
+          username={username}
+          setUsername={setUsername}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          toggleSignUp={handleToggleSignUp}
+          handleGoogleSignIn={handleGoogleSignIn}
         />
-        <CustomInput
-          label={"Email Address"}
-          type={"email"}
-          value={email}
-          onChange={setEmail}
-          placeholder={"Enter your email address"}
-          iconUrl={"/icons/email.svg"}
-          iconAlt={"email"}
+      ) : (
+        <SignIn
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          toggleSignUp={handleToggleSignUp}
+          handleGoogleSignIn={handleGoogleSignIn}
         />
-        <CustomInput
-          label={"Password"}
-          type={"password"}
-          value={password}
-          onChange={setPassword}
-          placeholder={"Enter your password"}
-          iconUrl={"/icons/password.svg"}
-          iconAlt={"password"}
-        />
-        <CustomCTA
-          text={"Sign Up"}
-          handleClick={handleSignUp}
-          secondaryIconUrl={"/icons/login.svg"}
-        />
-
-        <div className="flex flex-row items-center justify-center gap-1 text-sm">
-          <span>Already have an account?</span>
-          <button
-            onClick={handleSignIn}
-            className="text-[#4F45E4] font-semibold cursor-pointer"
-          >
-            Sign In
-          </button>
-        </div>
-
-        <CustomCTA
-          text={"Sign In With Google"}
-          onClick={handleGoogleSignIn}
-          primaryIconUrl={"/icons/google.svg"}
-          btnBg={"bg-[#111729]"}
-        />
-      </div>
+      )}
     </div>
   );
 };
