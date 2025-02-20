@@ -3,21 +3,32 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
-import { auth } from "./firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "./firebase";
 
 // Sign-up function
-export const signUp = async (email, password) => {
+export const signUp = async (email, password, username) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-    console.log("User signed up:", userCredential.user);
-    return userCredential.user;
+
+    const user = userCredential.user;
+
+    await updateProfile(user, { displayName: username });
+
+    // await setDoc(doc(db, "users", uid), {
+    //   name: username,
+    //   email: email,
+    //   createdAt: new Date(),
+    // });
+
+    return user;
   } catch (error) {
-    console.error("Sign-up error:", error.message);
     throw error;
   }
 };
