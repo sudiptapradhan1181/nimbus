@@ -5,14 +5,18 @@ import CustomInput from "@/components/CustomInput";
 import CustomCTA from "@/components/CustomCTA";
 
 const AuthPage = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignUp = async () => {
+    console.log("Signing up...");
     try {
-      const user = await signUp(email, password);
+      const user = await signUp(email, password, username);
+      console.log("User signed up:", user);
       alert("Sign-up successful!");
     } catch (error) {
+      console.error("Sign-up error:", error.message);
       alert("Sign-up failed: " + error.message);
     }
   };
@@ -20,8 +24,10 @@ const AuthPage = () => {
   const handleSignIn = async () => {
     try {
       const user = await signIn(email, password);
+      console.log("User signed up:", user);
       alert("Sign-in successful!");
     } catch (error) {
+      console.error("Sign-up error:", error.message);
       alert("Sign-in failed: " + error.message);
     }
   };
@@ -36,7 +42,14 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="text-white w-screen h-screen flex flex-col items-center justify-center gap-10 bg-black">
+    <div className="relative text-white w-screen h-screen flex flex-col items-center justify-center gap-10 bg-black">
+      <div className="absolute bottom-0 left-0 w-[300px] h-[300px]">
+        <img
+          className="w-full h-full"
+          src="/animations/auth.gif"
+          alt="animation"
+        />
+      </div>
       <div className="flex flex-col items-center justify-center gap-2">
         <h1 className="font-bold text-[52px]">Sign Up for Free</h1>
         <h2 className="font-medium text-[30px]">
@@ -44,6 +57,15 @@ const AuthPage = () => {
         </h2>
       </div>
       <div className="flex flex-col items-center justify-center gap-8">
+        <CustomInput
+          label={"Full Name"}
+          type={"text"}
+          value={username}
+          onChange={setUsername}
+          placeholder={"Enter your full name"}
+          iconUrl={"/icons/userWhite.svg"}
+          iconAlt={"email"}
+        />
         <CustomInput
           label={"Email Address"}
           type={"email"}
@@ -64,7 +86,7 @@ const AuthPage = () => {
         />
         <CustomCTA
           text={"Sign Up"}
-          onClick={handleSignUp}
+          handleClick={handleSignUp}
           secondaryIconUrl={"/icons/login.svg"}
         />
 
