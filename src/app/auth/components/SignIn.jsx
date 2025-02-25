@@ -1,6 +1,7 @@
 import CustomInput from "@/components/CustomInput";
 import CustomCTA from "@/components/CustomCTA";
 import { signIn } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 export default function SignIn({
   email,
@@ -10,11 +11,12 @@ export default function SignIn({
   toggleSignUp,
   handleGoogleSignIn,
 }) {
+  const router = useRouter();
   const handleSignIn = async () => {
     try {
       const user = await signIn(email, password);
-      console.log("User signed up:", user);
-      alert("Sign-in successful!");
+      console.log("User signed in:", user);
+      router.replace("/dashboard");
     } catch (error) {
       console.error("Sign-up error:", error.message);
       alert("Sign-in failed: " + error.message);
