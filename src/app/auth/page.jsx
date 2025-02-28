@@ -20,6 +20,9 @@ const AuthPage = () => {
   };
 
   const handleToggleSignUp = () => {
+    setEmail("");
+    setPassword("");
+    setUsername("");
     setIsSignUp(!isSignUp);
   };
 
