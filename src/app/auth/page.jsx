@@ -8,6 +8,7 @@ const AuthPage = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(true);
 
   const handleGoogleSignIn = async () => {
@@ -23,6 +24,7 @@ const AuthPage = () => {
     setEmail("");
     setPassword("");
     setUsername("");
+    setShowPassword(false);
     setIsSignUp(!isSignUp);
   };
 
@@ -49,6 +51,8 @@ const AuthPage = () => {
           setEmail={setEmail}
           password={password}
           setPassword={setPassword}
+          showPassword={showPassword}
+          setShowPassword={setShowPassword}
           toggleSignUp={handleToggleSignUp}
           handleGoogleSignIn={handleGoogleSignIn}
         />
@@ -58,6 +62,8 @@ const AuthPage = () => {
           setEmail={setEmail}
           password={password}
           setPassword={setPassword}
+          showPassword={showPassword}
+          setShowPassword={setShowPassword}
           toggleSignUp={handleToggleSignUp}
           handleGoogleSignIn={handleGoogleSignIn}
         />
