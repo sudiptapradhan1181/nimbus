@@ -8,6 +8,8 @@ export default function SignIn({
   setEmail,
   password,
   setPassword,
+  showPassword,
+  setShowPassword,
   toggleSignUp,
   handleGoogleSignIn,
 }) {
@@ -32,16 +34,16 @@ export default function SignIn({
         onChange={setEmail}
         placeholder={"Enter your email address"}
         iconUrl={"/icons/email.svg"}
-        iconAlt={"email"}
       />
       <CustomInput
         label={"Password"}
-        type={"password"}
+        type={showPassword ? "text" : "password"}
         value={password}
         onChange={setPassword}
         placeholder={"Enter your password"}
         iconUrl={"/icons/password.svg"}
-        iconAlt={"password"}
+        rightIconUrl={showPassword ? "/icons/eyeOff.svg" : "/icons/eye.svg"}
+        rightIconClick={() => setShowPassword(!showPassword)}
       />
       <CustomCTA
         text={"Sign In"}

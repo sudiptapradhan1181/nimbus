@@ -5,6 +5,8 @@ export default function CustomInput({
   onChange,
   placeholder,
   iconUrl,
+  rightIconUrl,
+  rightIconClick,
 }) {
   return (
     <div className="flex flex-col gap-1">
@@ -20,6 +22,14 @@ export default function CustomInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
         />
+        {rightIconUrl ? (
+          <img
+            src={rightIconUrl}
+            alt={"right-input-icon"}
+            className="w-[20px] h-[20px] cursor-pointer"
+            onClick={rightIconClick}
+          />
+        ) : null}
       </div>
     </div>
   );
