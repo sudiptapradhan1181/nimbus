@@ -10,13 +10,17 @@ const AuthPage = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(true);
+  const [isSSOLoading, setIsSSOLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
+    setIsSSOLoading(true);
     try {
       const user = await signInWithGoogle();
       alert(`Signed in as ${user.displayName}`);
+      setIsSSOLoading(false);
     } catch (error) {
       alert("Sign-in failed: " + error.message);
+      setIsSSOLoading(false);
     }
   };
 
@@ -25,6 +29,7 @@ const AuthPage = () => {
     setPassword("");
     setUsername("");
     setShowPassword(false);
+    setIsSSOLoading(false);
     setIsSignUp(!isSignUp);
   };
 
@@ -55,6 +60,7 @@ const AuthPage = () => {
           setShowPassword={setShowPassword}
           toggleSignUp={handleToggleSignUp}
           handleGoogleSignIn={handleGoogleSignIn}
+          isSSOLoading={isSSOLoading}
         />
       ) : (
         <SignIn
@@ -66,6 +72,7 @@ const AuthPage = () => {
           setShowPassword={setShowPassword}
           toggleSignUp={handleToggleSignUp}
           handleGoogleSignIn={handleGoogleSignIn}
+          isSSOLoading={isSSOLoading}
         />
       )}
     </div>
