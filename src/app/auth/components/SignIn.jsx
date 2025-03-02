@@ -1,7 +1,9 @@
+"use client";
 import CustomInput from "@/components/CustomInput";
 import CustomCTA from "@/components/CustomCTA";
 import { signIn } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function SignIn({
   email,
@@ -12,15 +14,18 @@ export default function SignIn({
   setShowPassword,
   toggleSignUp,
   handleGoogleSignIn,
+  isSSOLoading,
 }) {
   const router = useRouter();
+  const [isCTALoading, setIsCTALoading] = useState(false);
   const handleSignIn = async () => {
+    setIsCTALoading(true);
     try {
       const user = await signIn(email, password);
-      console.log("User signed in:", user);
+      setIsCTALoading(false);
       router.replace("/dashboard");
     } catch (error) {
-      console.error("Sign-up error:", error.message);
+      setIsCTALoading(false);
       alert("Sign-in failed: " + error.message);
     }
   };
@@ -48,6 +53,7 @@ export default function SignIn({
       <CustomCTA
         text={"Sign In"}
         handleClick={handleSignIn}
+        isLoading={isCTALoading}
         secondaryIconUrl={"/icons/login.svg"}
       />
 
@@ -63,9 +69,10 @@ export default function SignIn({
 
       <CustomCTA
         text={"Sign In With Google"}
-        onClick={handleGoogleSignIn}
+        handleClick={handleGoogleSignIn}
         primaryIconUrl={"/icons/google.svg"}
         btnBg={"bg-[#111729]"}
+        isLoading={isSSOLoading}
       />
     </div>
   );
