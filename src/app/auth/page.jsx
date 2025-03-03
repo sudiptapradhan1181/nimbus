@@ -3,10 +3,12 @@ import { useState } from "react";
 import { signInWithGoogle } from "@/lib/auth";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
+import { isValidEmail } from "@/lib/helper";
 
 const AuthPage = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(true);
@@ -25,12 +27,25 @@ const AuthPage = () => {
   };
 
   const handleToggleSignUp = () => {
+    // Reset all fields
     setEmail("");
     setPassword("");
     setUsername("");
     setShowPassword(false);
     setIsSSOLoading(false);
+    setIsEmailValid(true);
     setIsSignUp(!isSignUp);
+  };
+
+  const handleEmailBlur = () => {
+    setIsEmailValid(email.length > 0 && isValidEmail(email));
+  };
+
+  const handleEmailChange = (email) => {
+    setEmail(email);
+    if (!isEmailValid && email.length > 0 && isValidEmail(email)) {
+      setIsEmailValid(true);
+    }
   };
 
   return (
@@ -53,7 +68,6 @@ const AuthPage = () => {
           username={username}
           setUsername={setUsername}
           email={email}
-          setEmail={setEmail}
           password={password}
           setPassword={setPassword}
           showPassword={showPassword}
@@ -61,11 +75,13 @@ const AuthPage = () => {
           toggleSignUp={handleToggleSignUp}
           handleGoogleSignIn={handleGoogleSignIn}
           isSSOLoading={isSSOLoading}
+          isEmailValid={isEmailValid}
+          handleEmailBlur={handleEmailBlur}
+          handleEmailChange={handleEmailChange}
         />
       ) : (
         <SignIn
           email={email}
-          setEmail={setEmail}
           password={password}
           setPassword={setPassword}
           showPassword={showPassword}
@@ -73,6 +89,9 @@ const AuthPage = () => {
           toggleSignUp={handleToggleSignUp}
           handleGoogleSignIn={handleGoogleSignIn}
           isSSOLoading={isSSOLoading}
+          isEmailValid={isEmailValid}
+          handleEmailBlur={handleEmailBlur}
+          handleEmailChange={handleEmailChange}
         />
       )}
     </div>

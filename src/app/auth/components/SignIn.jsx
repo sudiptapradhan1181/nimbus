@@ -15,6 +15,9 @@ export default function SignIn({
   toggleSignUp,
   handleGoogleSignIn,
   isSSOLoading,
+  isEmailValid,
+  handleEmailBlur,
+  handleEmailChange,
 }) {
   const router = useRouter();
   const [isCTALoading, setIsCTALoading] = useState(false);
@@ -36,9 +39,12 @@ export default function SignIn({
         label={"Email Address"}
         type={"email"}
         value={email}
-        onChange={setEmail}
+        onChange={handleEmailChange}
         placeholder={"Enter your email address"}
         iconUrl={"/icons/email.svg"}
+        isError={!isEmailValid}
+        handleBlur={handleEmailBlur}
+        errorMessage={"Invalid email address"}
       />
       <CustomInput
         label={"Password"}
