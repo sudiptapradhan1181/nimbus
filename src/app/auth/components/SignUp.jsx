@@ -8,7 +8,6 @@ export default function SignUp({
   username,
   setUsername,
   email,
-  setEmail,
   password,
   setPassword,
   showPassword,
@@ -16,6 +15,9 @@ export default function SignUp({
   toggleSignUp,
   handleGoogleSignIn,
   isSSOLoading,
+  isEmailValid,
+  handleEmailBlur,
+  handleEmailChange,
 }) {
   const router = useRouter();
   const [isCTALoading, setIsCTALoading] = useState(false);
@@ -45,9 +47,12 @@ export default function SignUp({
         label={"Email Address"}
         type={"email"}
         value={email}
-        onChange={setEmail}
+        onChange={handleEmailChange}
         placeholder={"Enter your email address"}
         iconUrl={"/icons/email.svg"}
+        isError={!isEmailValid}
+        handleBlur={handleEmailBlur}
+        errorMessage={"Invalid email address"}
       />
       <CustomInput
         label={"Password"}
