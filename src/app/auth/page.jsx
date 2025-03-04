@@ -3,7 +3,7 @@ import { useState } from "react";
 import { signInWithGoogle } from "@/lib/auth";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
-import { isValidEmail } from "@/lib/helper";
+import { isDisposableEmail, isValidEmail } from "@/lib/helper";
 
 const AuthPage = () => {
   const [username, setUsername] = useState("");
@@ -37,13 +37,17 @@ const AuthPage = () => {
     setIsSignUp(!isSignUp);
   };
 
+  const emailValidityChecker = (email) => {
+    return email.length > 0 && isValidEmail(email) && !isDisposableEmail(email);
+  };
+
   const handleEmailBlur = () => {
-    setIsEmailValid(email.length > 0 && isValidEmail(email));
+    setIsEmailValid(emailValidityChecker(email));
   };
 
   const handleEmailChange = (email) => {
     setEmail(email);
-    if (!isEmailValid && email.length > 0 && isValidEmail(email)) {
+    if (!isEmailValid && emailValidityChecker(email)) {
       setIsEmailValid(true);
     }
   };

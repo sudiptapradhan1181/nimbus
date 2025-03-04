@@ -1,1 +1,25 @@
 export const COOKIE_AGE = 60 * 60;
+
+export const disposableEmails = new Set([
+  "10minutemail.com",
+  "20minutemail.com",
+  "airmail.cc",
+  "anonymbox.com",
+  "blockemail.com",
+  "burnermail.io",
+  "byom.de",
+  "disposablemail.com",
+  "emailondeck.com",
+  "getnada.com",
+  "guerrillamail.com",
+  "incognitomail.com",
+  "mailinator.com",
+  "maildrop.cc",
+  "mytemp.email",
+  "sharklasers.com",
+  "spamgourmet.com",
+  "temp-mail.org",
+  "tempmail.com",
+  "throwawaymail.com",
+  "yopmail.com",
+]);
