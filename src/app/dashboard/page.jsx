@@ -1,3 +1,28 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { parseCookies } from "nookies";
+import { jwtDecode } from "jwt-decode";
+
 export default function Dashboard() {
-  return <div>Dashboard</div>;
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const cookies = parseCookies();
+    if (cookies.accessToken) {
+      try {
+        const decoded = jwtDecode(cookies.accessToken);
+        setUser(decoded);
+      } catch (error) {
+        console.error("Invalid Token:", error);
+      }
+    }
+  }, []);
+
+  // Render only when the user state is set
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
+  return <div>Welcome {user.name}!</div>;
 }
