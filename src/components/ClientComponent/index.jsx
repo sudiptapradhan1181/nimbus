@@ -8,7 +8,7 @@ export default function ClientComponent() {
   const cookies = parseCookies();
   const router = useRouter();
   useEffect(() => {
-    if (!cookies.token) {
+    if (!cookies.accessToken) {
       router.replace("/auth");
     } else {
       router.replace("/dashboard");
