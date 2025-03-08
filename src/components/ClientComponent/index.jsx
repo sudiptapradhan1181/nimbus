@@ -7,11 +7,10 @@ import { parseCookies } from "nookies";
 export default function ClientComponent() {
   const cookies = parseCookies();
   const router = useRouter();
+  console.log(cookies);
   useEffect(() => {
     if (!cookies.accessToken) {
       router.replace("/auth");
-    } else {
-      router.replace("/dashboard");
     }
   }, [cookies, router]);
   return null;
