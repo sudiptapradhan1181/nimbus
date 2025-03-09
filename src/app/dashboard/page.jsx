@@ -24,5 +24,10 @@ export default function Dashboard() {
     return <div>Loading...</div>;
   }
 
-  return <div>Welcome {user.name}!</div>;
+  return (
+    <div className="flex flex-col">
+      <span>Welcome {user.name}!</span>
+      <a href="/canvas">Go to Canvas</a>
+    </div>
+  );
 }
